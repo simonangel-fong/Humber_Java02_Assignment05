@@ -1,0 +1,25 @@
+-- MySql
+-- Wenhao Fang
+
+DROP TABLE country;
+
+CREATE TABLE COUNTRY(
+  COUNTRY_ID INT NOT NULL AUTO_INCREMENT
+, COUNTRY_NAME VARCHAR(50)
+, LIFE_EXPECTANCY FLOAT(5, 2)
+, PRIMARY KEY (COUNTRY_ID)
+);
+
+-- desc country;
+
+INSERT INTO country VALUES(
+  1
+, 'Canada'
+, 75
+);
+
+INSERT INTO country VALUES(
+  2
+, 'USA'
+, 65
+);
