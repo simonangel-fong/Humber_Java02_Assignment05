@@ -1,0 +1,6 @@
+Kevin_login
+
+    private final static String class_name = "com.mysql.cj.jdbc.Driver";
+    private final static String data_url = "jdbc:mysql://localhost:3307/itc_5201";
+    private final static String userName = "root";
+    private final static String pwd = "";
