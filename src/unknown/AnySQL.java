@@ -1,5 +1,5 @@
 package unknown;
-// Due to the IDE, the package cannot created as instruction.
+// Due to limitation of the IDE, the package cannot created as instruction.
 
 import java.util.Scanner;
 import java.sql.*;
@@ -9,7 +9,7 @@ import java.sql.*;
  * of SQL command from the console and execute the command using JDBC API.
  * 
  * @author Wenhao Fang
- * @version V1.001
+ * @version V1.003
  */
 public class AnySQL {
 
@@ -80,10 +80,10 @@ public class AnySQL {
             // get the return of the execute
             boolean executeResult = stmnt.execute(sql);
 
-            System.out.println("\n--------SQL Executed--------\n");
-
             // if it is true, which means the first return is a ResultSet
             if (executeResult == true) {
+                System.out.println("\n--------SQL Executed--------\n");
+
                 resultSet = stmnt.getResultSet();
                 ResultSetMetaData rsMetaData = resultSet.getMetaData();
                 int column_count = rsMetaData.getColumnCount();// get the nubmer of columns
@@ -111,6 +111,7 @@ public class AnySQL {
                 // print summary
                 System.out.println(String.format("\n%d row(s) in set", row_count));
             } else {
+                System.out.println("\n--------SQL Executed--------\n");
                 int count = stmnt.getUpdateCount(); // get affected row
                 System.out.println(String.format("Query OK, %d row affected", count));
             }
