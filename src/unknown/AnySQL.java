@@ -1,13 +1,19 @@
 package unknown;
+// Due to the IDE, the package cannot created as instruction.
 
 import java.util.Scanner;
 import java.sql.*;
 
 /**
+ * This is a class represents a console that accepts uer's accepts user’s input
+ * of SQL command from the console and execute the command using JDBC API.
+ * 
  * @author Wenhao Fang
  * @version V1.001
  */
 public class AnySQL {
+
+    // region Private members
     private final static String CLASS_NAME = "com.mysql.cj.jdbc.Driver";
     private final static String DB_URL = "jdbc:mysql://localhost/dbjava";
 
@@ -15,13 +21,27 @@ public class AnySQL {
     private static Statement stmnt = null;
     private static ResultSet resultSet = null;
     private static Scanner sc = null;
+    // endregion
 
+    /**
+     * Creates a connection with the MySQL
+     * 
+     * @param class_name The name of mysql driver class
+     * @param data_url   The url of MySQL database
+     * @param userName   User Name
+     * @param pwd        Password
+     * @throws ClassNotFoundException Exception when cannot find the class
+     * @throws SQLException           The SQL Error
+     */
     private static void createConnection(String class_name, String data_url, String userName, String pwd)
             throws ClassNotFoundException, SQLException {
         Class.forName(class_name);
         conn = DriverManager.getConnection(data_url, userName, pwd);
     }
 
+    /**
+     * Closes connection, statement, and ResultSet
+     */
     private static void CloseConnection() {
         try {
             if (conn != null) {
@@ -39,6 +59,9 @@ public class AnySQL {
         }
     }
 
+    /**
+     * Closes scanner.
+     */
     private static void CloseScanner() {
         if (sc != null) {
             sc.close();
@@ -46,27 +69,26 @@ public class AnySQL {
         System.out.println("Scanner Closed.");
     }
 
+    /**
+     * Executes the input SQL statement.
+     * 
+     * @param sql The input SQL statement.
+     */
     private static void ExecuteSQL(String sql) {
-        try {
-            // String sql_test = "select * from country";
-            // String sql_test = "insert into country (COUNTRY_NAME,
-            // LIFE_EXPECTANCY)values('AA',65.00)";
-            // String sql_test = "update country set COUNTRY_NAME='wwww' where COUNTRY_ID =
-            // 3";
-            // boolean executeResult = stmnt.execute(sql_test);
 
+        try {
+            // get the return of the execute
             boolean executeResult = stmnt.execute(sql);
 
-            // System.out.println(executeResult);
+            System.out.println("\n--------SQL Executed--------\n");
 
+            // if it is true, which means the first return is a ResultSet
             if (executeResult == true) {
                 resultSet = stmnt.getResultSet();
                 ResultSetMetaData rsMetaData = resultSet.getMetaData();
-                int column_count = rsMetaData.getColumnCount();
+                int column_count = rsMetaData.getColumnCount();// get the nubmer of columns
 
-                // rsMetaData.getColumnType(column_count)
-                System.out.println("\n--------SQL Executed--------\n");
-
+                // builds heading
                 String heading = "";
                 for (int i = 1; i <= column_count; i++) {
                     heading = String.format("%s%s\t",
@@ -74,6 +96,7 @@ public class AnySQL {
                 }
                 System.out.println(heading);
 
+                // build content
                 int row_count = 0;
                 while (resultSet.next()) {
                     String row = "";
@@ -84,9 +107,11 @@ public class AnySQL {
                     System.out.println(row);
                     row_count += 1;
                 }
+
+                // print summary
                 System.out.println(String.format("\n%d row(s) in set", row_count));
             } else {
-                int count = stmnt.getUpdateCount();
+                int count = stmnt.getUpdateCount(); // get affected row
                 System.out.println(String.format("Query OK, %d row affected", count));
             }
 
@@ -101,11 +126,14 @@ public class AnySQL {
 
     public static void main(String[] args) {
 
+        // region Defines variables
         String userName, pwd, sql_str = "";
 
         boolean flag = true;
 
         sc = new Scanner(System.in);
+
+        // endregion
 
         System.out.println("\nWelcome to MySQL Terminal\n");
         System.out.print("\nPlease input your username:\nmysql> ");
@@ -115,10 +143,13 @@ public class AnySQL {
         pwd = sc.nextLine();
 
         try {
+            // create MySQL connection
             createConnection(CLASS_NAME, DB_URL, userName, pwd);
             stmnt = conn.createStatement();
 
             System.out.print("\nMySQL Database connected.\n");
+
+            // Using a do while loop to catch input SQL statements.
             do {
                 System.out.print("\nInput SQL statement: (Input \"q\" to exit.)\nmysql> ");
                 sql_str = sc.nextLine();
@@ -142,6 +173,7 @@ public class AnySQL {
             CloseScanner();
             CloseConnection();
         }
+
         System.out.println("Program Exited.");
     }
 }
